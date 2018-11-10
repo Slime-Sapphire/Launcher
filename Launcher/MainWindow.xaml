@@ -3,95 +3,221 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Launcher"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" AllowsTransparency="True" WindowStyle="None" Background="#02000000"
         MouseDown="Window_OnMouseDown" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Image x:Name="BackgroundImage" Margin="0,0,0,0" Stretch="UniformToFill" Source="sapphire.jpg" OpacityMask="#E5000000"/>
+        <Image x:Name="BackgroundImage" Margin="0,0,0,0" Stretch="UniformToFill" Source="sapphire.jpg"
+               OpacityMask="#E5000000" />
 
         <Grid x:Name="ControlGrid" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top">
-            <Button x:Name="CloseButton" Content="" HorizontalAlignment="Right" Margin="0,0,0,0"
-                    VerticalAlignment="Top" Width="20" Height="20" Click="CloseButton_Click" Background="#7FFF0000"
-                    BorderBrush="{x:Null}" />
-            <Button x:Name="CollapseButton" Content="" HorizontalAlignment="Right" Margin="0,0,25,0"
-                    VerticalAlignment="Top" Width="20" Height="20" Click="CollapseButton_Click" Background="#7F00FF00"
-                    BorderBrush="{x:Null}" />
+            <Button x:Name="CloseButton" Content="X" HorizontalAlignment="Right" Margin="0,0,0,0"
+                    VerticalAlignment="Top" Width="20" Height="20" Click="CloseButton_OnClick" Background="#7FFF0000"
+                    BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" />
+            <Button x:Name="CollapseButton" Content="—" HorizontalAlignment="Right" Margin="0,0,25,0"
+                    VerticalAlignment="Top" Width="20" Height="20" Click="CollapseButton_OnClick"
+                    Background="#7F00FF00"
+                    BorderBrush="{x:Null}" Foreground="White" FontWeight="Bold" />
         </Grid>
 
-        <Grid x:Name="LoginGrid" HorizontalAlignment="Left" Margin="585,285,0,0" VerticalAlignment="Top"
-              Width="180" KeyDown="LoginGrid_OnKeyDown" Background="#CC000000">
-            <Grid HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Top"
-                  RenderTransformOrigin="0.5,0.5">
-                <TextBox x:Name="UsernameTextBox" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                         Margin="0,0,0,0" FontSize="18" Background="#7FFFFFFF">
-                    <TextBox.Effect>
+        <Grid x:Name="CredentialsGrid" Background="#CC000000" Margin="20,0,0,20" VerticalAlignment="Bottom"
+              HorizontalAlignment="Left">
+            <Grid x:Name="LoginGrid" Visibility="Visible" HorizontalAlignment="Left" Margin="0,0,0,0"
+                  VerticalAlignment="Bottom"
+                  Width="180" KeyUp="LoginGrid_OnKeyUp">
+                <Grid HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Top"
+                      RenderTransformOrigin="0.5,0.5">
+                    <TextBox x:Name="UsernameTextBox" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                             Margin="0,0,0,0" FontSize="18" Background="#7FFFFFFF">
+                        <TextBox.Effect>
+                            <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                        </TextBox.Effect>
+                    </TextBox>
+                    <TextBlock IsHitTestVisible="False" Text="Username" VerticalAlignment="Center"
+                               HorizontalAlignment="Stretch" Margin="5,0,0,0" Foreground="Gainsboro" FontSize="18">
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="10" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                        </TextBlock.Effect>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=UsernameTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <Grid HorizontalAlignment="Stretch" Margin="10,40,10,10" VerticalAlignment="Top"
+                      RenderTransformOrigin="0.5,0.5">
+                    <PasswordBox x:Name="UserPasswordBox" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                 Margin="0,0,0,0" FontSize="18"
+                                 PasswordChanged="UserPasswordBox_OnPasswordChanged" Background="#7FFFFFFF">
+                        <PasswordBox.Effect>
+                            <DropShadowEffect Color="White" Direction="0" RenderingBias="Quality" ShadowDepth="0" />
+                        </PasswordBox.Effect>
+                    </PasswordBox>
+                    <TextBlock x:Name="PasswordWatermark" IsHitTestVisible="False" Text="Password"
+                               VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Stretch" Margin="5,0,0,0"
+                               Foreground="Gainsboro">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="10" RenderingBias="Quality" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </Grid>
+                <CheckBox x:Name="RememberMeCheckBox" Content="Remember me" HorizontalAlignment="Stretch"
+                          Margin="10,70,10,10"
+                          VerticalAlignment="Top" BorderBrush="{x:Null}" Background="#CCFFFFFF" Foreground="Gainsboro"
+                          KeyDown="RememberMeCheckBox_OnKeyDown">
+                    <CheckBox.Effect>
+                        <DropShadowEffect Direction="0" RenderingBias="Quality" ShadowDepth="0" />
+                    </CheckBox.Effect>
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+                <Button x:Name="SignInButton" IsEnabled="False" FontSize="18" Content="Sign In" HorizontalAlignment="Stretch"
+                        Margin="10,95,10,10" VerticalAlignment="Top" FontWeight="Bold" BorderBrush="{x:Null}"
+                        Background="#7FFFFFFF" Click="SignInButton_OnClick">
+                    <Button.Effect>
                         <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
-                    </TextBox.Effect>
-                </TextBox>
-                <TextBlock IsHitTestVisible="False" Text="Username" VerticalAlignment="Center"
-                           HorizontalAlignment="Stretch" Margin="5,0,0,0" Foreground="Gainsboro" FontSize="18">
-                    <TextBlock.Effect>
-                        <DropShadowEffect BlurRadius="10" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
-                    </TextBlock.Effect>
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=UsernameTextBox}" Value="">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                    </Button.Effect>
+                </Button>
+                <Button x:Name="RegisterButton" FontSize="18" Content="Register" HorizontalAlignment="Stretch"
+                        Margin="10,125,10,10" VerticalAlignment="Top" FontWeight="Bold" BorderBrush="{x:Null}"
+                        Background="#7FFFFFFF" Click="RegisterButton_OnClick">
+                    <Button.Effect>
+                        <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                    </Button.Effect>
+                </Button>
             </Grid>
-            <Grid HorizontalAlignment="Stretch" Margin="10,40,10,10" VerticalAlignment="Top"
-                  RenderTransformOrigin="0.5,0.5">
-                <PasswordBox x:Name="UserPasswordBox" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                             Margin="0,0,0,0" FontSize="18"
-                             PasswordChanged="UserPasswordBox_OnPasswordChanged" Background="#7FFFFFFF">
-                    <PasswordBox.Effect>
-                        <DropShadowEffect Color="White" Direction="0" RenderingBias="Quality" ShadowDepth="0" />
-                    </PasswordBox.Effect>
-                </PasswordBox>
-                <TextBlock x:Name="PasswordWatermark" IsHitTestVisible="False" Text="Password"
-                           VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Stretch" Margin="5,0,0,0"
-                           Foreground="Gainsboro">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="10" RenderingBias="Quality" />
-                    </TextBlock.Effect>
-                </TextBlock>
+
+            <Grid x:Name="RegisterGrid" Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom"
+                  Width="350" KeyUp="RegisterGrid_OnKeyUp" Background="#CC000000">
+                <Grid Name="LeftColumn" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
+                    <Grid HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Top"
+                          RenderTransformOrigin="0.5,0.5">
+                        <TextBox x:Name="RegUsernameTextBox" TextChanged="RegUsernameTextBox_OnTextChanged"
+                                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                 Margin="0,0,0,0" FontSize="18" Background="#7FFFFFFF">
+                            <TextBox.Effect>
+                                <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                            </TextBox.Effect>
+                        </TextBox>
+                        <TextBlock IsHitTestVisible="False" Text="Username" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" Margin="5,0,0,0" Foreground="Gainsboro" FontSize="18">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="10" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                            </TextBlock.Effect>
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=RegUsernameTextBox}" Value="">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                    <Grid HorizontalAlignment="Stretch" Margin="10,40,10,10" VerticalAlignment="Top"
+                          RenderTransformOrigin="0.5,0.5">
+                        <PasswordBox x:Name="RegUserPasswordBox" VerticalAlignment="Center"
+                                     HorizontalAlignment="Stretch"
+                                     Margin="0,0,0,0" FontSize="18"
+                                     PasswordChanged="RegUserPasswordBox_OnPasswordChanged" Background="#7FFFFFFF">
+                            <PasswordBox.Effect>
+                                <DropShadowEffect Color="White" Direction="0" RenderingBias="Quality" ShadowDepth="0" />
+                            </PasswordBox.Effect>
+                        </PasswordBox>
+                        <TextBlock x:Name="RegPasswordWatermark" IsHitTestVisible="False" Text="Password"
+                                   VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Stretch"
+                                   Margin="5,0,0,0"
+                                   Foreground="Gainsboro">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="10" RenderingBias="Quality" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
+                    <Button x:Name="SignUpButton" IsEnabled="False" FontSize="18" Content="Sign Up" HorizontalAlignment="Stretch"
+                            Margin="10,70,10,10" VerticalAlignment="Top" FontWeight="Bold" BorderBrush="{x:Null}"
+                            Background="#7FFFFFFF" Click="SignUpButton_OnClick">
+                        <Button.Effect>
+                            <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                        </Button.Effect>
+                    </Button>
+                </Grid>
+                <Grid Name="RightColumn" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"
+                      Margin="170,0,0,0">
+                    <Grid HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Top"
+                          RenderTransformOrigin="0.5,0.5">
+                        <TextBox x:Name="RegEmailTextBox" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                 Margin="0,0,0,0" FontSize="18" Background="#7FFFFFFF"
+                                 TextChanged="RegEmailTextBox_OnTextChanged">
+                            <TextBox.Effect>
+                                <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                            </TextBox.Effect>
+                        </TextBox>
+                        <TextBlock IsHitTestVisible="False" Text="Email" VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch" Margin="5,0,0,0" Foreground="Gainsboro" FontSize="18">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="10" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                            </TextBlock.Effect>
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=RegEmailTextBox}" Value="">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                    <Grid HorizontalAlignment="Stretch" Margin="10,40,10,10" VerticalAlignment="Top"
+                          RenderTransformOrigin="0.5,0.5">
+                        <PasswordBox x:Name="RegUserPasswordCheckBox" VerticalAlignment="Center"
+                                     HorizontalAlignment="Stretch"
+                                     Margin="0,0,0,0" FontSize="18"
+                                     PasswordChanged="RegUserPasswordCheckBox_OnPasswordChanged" Background="#7FFFFFFF">
+                            <PasswordBox.Effect>
+                                <DropShadowEffect Color="White" Direction="0" RenderingBias="Quality" ShadowDepth="0" />
+                            </PasswordBox.Effect>
+                        </PasswordBox>
+                        <TextBlock x:Name="RegPasswordCheckWatermark" IsHitTestVisible="False" Text="Confirm password"
+                                   VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Stretch"
+                                   Margin="5,0,0,0"
+                                   Foreground="Gainsboro">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="10" RenderingBias="Quality" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
+                    <Button x:Name="RegisterBackButton" FontSize="18" Content="Back" HorizontalAlignment="Stretch"
+                            Margin="10,70,10,10" VerticalAlignment="Top" FontWeight="Bold" BorderBrush="{x:Null}"
+                            Background="#7FFFFFFF" Click="RegisterBackButton_OnClick">
+                        <Button.Effect>
+                            <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
+                        </Button.Effect>
+                    </Button>
+                </Grid>
             </Grid>
-            <CheckBox x:Name="RememberMeCheckBox" Content="Remember me" HorizontalAlignment="Stretch" Margin="10,70,10,10"
-                      VerticalAlignment="Top" BorderBrush="{x:Null}" Background="#CCFFFFFF" Foreground="Gainsboro"
-                      KeyDown="RememberMeCheckBox_OnKeyDown">
-                <CheckBox.Effect>
-                    <DropShadowEffect Direction="0" RenderingBias="Quality" ShadowDepth="0" />
-                </CheckBox.Effect>
-                <CheckBox.LayoutTransform>
-                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                </CheckBox.LayoutTransform>
-            </CheckBox>
-            <Button x:Name="SignInButton" FontSize="18" Content="Sign In" HorizontalAlignment="Stretch"
-                    Margin="10,95,10,10" VerticalAlignment="Top" FontWeight="Bold" BorderBrush="{x:Null}"
-                    Background="#7FFFFFFF" Click="SignInButton_OnClick">
-                <Button.Effect>
-                    <DropShadowEffect Color="White" Direction="0" ShadowDepth="0" RenderingBias="Quality" />
-                </Button.Effect>
-            </Button>
         </Grid>
 
         <Grid x:Name="VisualElementsGrid">
-            <Rectangle Fill="#B21A1A1A" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="10"
+            <Rectangle Fill="#B209009C" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="10"
                        Margin="0,9.2,0,9.2" />
-            <Rectangle Fill="#B21A1A1A" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="10"
+            <Rectangle Fill="#B209009C" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="10"
                        Margin="0,9.2,0,9.2" />
-            <Rectangle Fill="#B21A1A1A" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="10"
+            <Rectangle Fill="#B209009C" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="10"
                        Margin="0,0,0,0" />
-            <Rectangle Fill="#B21A1A1A" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="10"
+            <Rectangle Fill="#B209009C" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="10"
                        Margin="0,0,0,0" />
         </Grid>
+
     </Grid>
 </Window>
